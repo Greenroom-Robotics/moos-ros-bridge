@@ -199,6 +199,7 @@ install(FILES
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   )
 
+# Added to include the config directory install for colcon build usage
 install(DIRECTORY 
   config
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
