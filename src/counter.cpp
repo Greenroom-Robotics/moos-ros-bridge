@@ -8,15 +8,17 @@
 
 using namespace std::chrono_literals;
 
+// A simple counter node that publishes a counter as an int32 at an interval of 10000ms
+
 class CounterPublisher : public rclcpp::Node
 {
   public:
     CounterPublisher()
-    : Node("minimal_publisher"), count_(0)
+    : Node("ros_counter"), count_(0)
     {
       publisher_ = this->create_publisher<std_msgs::msg::Int32>("CounterFromROS", 10);
       timer_ = this->create_wall_timer(
-      500ms, std::bind(&CounterPublisher::timer_callback, this));
+      1000ms, std::bind(&CounterPublisher::timer_callback, this));
     }
 
   private:
