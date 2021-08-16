@@ -5,6 +5,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/int32.hpp"
+#include "moos-ros-bridge/MsgContainer.h"
 
 using namespace std::chrono_literals;
 
@@ -37,7 +38,27 @@ class CounterPublisher : public rclcpp::Node
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<CounterPublisher>());
+  auto publisher_node = std::make_shared<CounterPublisher>();
+  auto another_pub = publisher_node->create_publisher<std_msgs::msg::Int32>("publisher_node", 10);
+
+  auto container = ContainerBase<std_msgs::msg::Int32>(
+    publisher_node,
+    "new_moosName", 
+		"new_rosName", 
+		"new_moosType", 
+		"new_rosType"
+    );
+  auto int_message = std_msgs::msg::Int32();
+  int_message.data = 12;
+  container.pub->publish(int_message);
+
+  
+  // (another_pub,"name","mane","mane","mane");
+
+
+  // RCLCPP_INFO(this->get_logger());
+  rclcpp::spin(publisher_node);
   rclcpp::shutdown();
+  
   return 0;
 }

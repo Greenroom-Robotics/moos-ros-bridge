@@ -19,14 +19,45 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(MOOS REQUIRED)
+
+## Specify additional locations of header files
+## Your package locations should be listed before other locations
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+)
+
 
 # Add source code
 add_executable(counter src/counter.cpp)
 ament_target_dependencies(counter rclcpp std_msgs)
 
+add_executable(Bridge 
+  src/MOOSNode.cpp
+  src/Bridge.cpp
+  src/ROSNode.cpp
+)
+ament_target_dependencies(Bridge rclcpp std_msgs)
+
+
+target_link_libraries(Bridge
+  ${catkin_LIBRARIES}
+  ${MOOS_LIBRARIES}
+  )
+
 install(TARGETS
   counter
+  Bridge
   DESTINATION lib/${PROJECT_NAME})
+
+# Mark executables and/or libraries for installation
+install(TARGETS counter #Bridge
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
